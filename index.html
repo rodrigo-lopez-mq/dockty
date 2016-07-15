@@ -1,0 +1,61 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Socket.IO chat</title>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      body { font: 20px Helvetica, Arial; }
+      form { background: #d6d6d6; padding: 3px; position: fixed; bottom: 0; width: 100%; }
+      form input { border: 0; padding: 10px; width: 90%; margin-right: .5%; }
+      form button { width: 9%; background: #FFFFFF; border: none; padding: 10px; }
+      #messages { list-style-type: none; margin: 0; padding: 0; }
+      #messages li { padding: 5px 10px; }
+      #messages li:nth-child(odd) { background: #eee; }
+    </style>
+  </head>
+    
+    <style>
+        div.menu
+        {
+/*            margin-top: 1000000px;*/
+/*            margin-left: 100px;*/
+        }
+    
+    </style>
+    
+  <body>
+      
+    <div class="menu">
+    
+    <p>User:&nbsp;<input name="user" type="text" />&nbsp;<input id="connect" type="button" value="Connect" />  </p>
+        <p id="online"> &nbsp; </p>
+    
+      </div>
+      
+    <ul id="messages"></ul>
+      
+      <div class="bar">
+    <form action="">
+      <input id="m" autocomplete="off" /><button>Send</button>
+    </form>
+      </div>
+      
+    <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
+    <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+    <script>
+      var socket = io();
+      $('form').submit(function(){
+        socket.emit('chat message', $('#m').val());
+        $('#m').val('');
+        return false;
+      });
+      socket.on('chat message', function(msg){
+        $('#messages').append($('<li>').text(msg));
+      });
+        
+      $('#connect').click(function(){
+      document.getElementById("online").innerHTML = "Hello World";
+      });    
+    </script>
+  </body>
+</html>
