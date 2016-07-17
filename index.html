@@ -25,11 +25,39 @@
     
   <body>
       
+    
+    
+      
     <div class="menu">
     
-    <p>User:&nbsp;<input name="user" type="text" />&nbsp;<input id="connect" type="button" value="Connect" />  </p>
+    <p><select id="users_input" name="users">
+        <option selected="selected" value="">maju</option>
+        <option selected="selected" value="">user</option>
+        <option selected="selected" value="">test</option>
+        <option selected="selected" value="">four</option>
+        <option selected="selected" value="">Select user</option></select>
+        &nbsp;
+        <input id="connect" name="connect" type="button" value="connect" /> 
+        &nbsp;
+        <select id="receiver_input">
+        <option selected="selected" value="">General</option>
+        <option selected="selected" value="">Other</option>    
+        <option selected="selected" value="">Secret</option>    
+        <option selected="selected" value="">maju</option>
+        <option selected="selected" value="">user</option>
+        <option selected="selected" value="">test</option>
+        <option selected="selected" value="">four</option>
+        <option selected="selected" value="">Select receiver</option></select>
+        &nbsp;
+        
+        
+    </p>
+
+
+
         <p id="online"> &nbsp; </p>
-    
+    <hr>
+        
       </div>
       
     <ul id="messages"></ul>
@@ -42,20 +70,106 @@
       
     <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
     <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+       
+      
+      
     <script>
       var socket = io();
-      $('form').submit(function(){
-        socket.emit('chat message', $('#m').val());
+      var current_user; 
+      var receiver;   
+        
+        var template_text =
+          '{'+
+            '"sender": "",'+
+            '"receiver": "",'+
+            '"message": {'+
+            '"type": "",'+
+            '"text": "",'+
+            '"more_data": {}'+
+                       '},'+
+            '"date": "",'+
+            '"time": ""'+
+          '}';
+          
+      var template = JSON.parse(template_text);    
+        
+//      $('form').submit(function(){
+//        socket.emit('chat message', $('#m').val());
+//        $('#m').val('');
+//        return false;
+//      });
+        
+//        socket.on('chat message', function(msg){
+//        $('#messages').append($('<li>').text(msg));
+//      });
+        
+        $('form').submit(function(){
+        
+              var msg_json=template;
+              
+//              msg_json.sender=current_user;
+//              msg_json.receiver=receiver;
+//              msg_json.message.text=msg_text;
+            
+              msg_json.sender="maju";
+              msg_json.receiver="General";
+              msg_json.message.text=$('#m').val();
+            
+        //alert(msg_json.message.text);    
+        socket.emit('message', msg_json);
         $('#m').val('');
         return false;
-      });
+        });
+        
+      socket.on('message', function(msg){
+        $('#messages').append($('<li>').text(JSON.stringify(msg)));
+      });    
       socket.on('chat message', function(msg){
         $('#messages').append($('<li>').text(msg));
       });
+      socket.on('available_rooms', function(msg){
+        $('#messages').append($('<li>').text(msg));
+      });
+        
+     
         
       $('#connect').click(function(){
-      document.getElementById("online").innerHTML = "Hello World";
+          current_user=$("#users_input").find("option:selected").text();
+          document.getElementById("online").innerHTML = "Logged in as "+ current_user;
+          
+          socket.emit('session', current_user);
+          logon=true;
+          
+          
       });    
-    </script>
+        
+        $("#users_input").change(function() {
+        document.getElementById("online").innerHTML = $(this).find("option:selected").text()+' Selected!, now click on connect button';
+        });
+        
+        $("#receiver_input").change(function() {
+         receiver=$("#receiver_input").find("option:selected").text();
+        //alert(receiver);
+        });
+        
+//      $("#users_input option:selected").text();
+      
+            
+//    alert(template.message.type);
+          
+//      function build_message(msg_text)
+//          {
+//              var msg_json=template;
+//              
+//              msg_json.sender=current_user;
+//              msg_json.receiver=receiver;
+//              msg_json.message.text=msg_text;
+//                          
+//              return msg_json;
+//          }
+      
+      
+      </script>
+      
   </body>
 </html>

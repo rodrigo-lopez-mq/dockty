@@ -1,0 +1,1 @@
+socket.emit('available_rooms', rooms);
