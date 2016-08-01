@@ -105,17 +105,17 @@
               msg_json.sender=current_user;
               msg_json.receiver=receiver;
               msg_json.message.text=$('#m').val();
+              msg_json.message.type="text";
             
 //              msg_json.sender="maju";
 //              msg_json.receiver="General";
 //              msg_json.message.text=$('#m').val();
             
         socket.emit('message', msg_json);
+        $('#messages').append($('<li>').text(current_user + " says: "+ $('#m').val()));
         $('#m').val('');
         return false;
         });
-        
-        var testi; 
         
         
        
@@ -137,9 +137,14 @@
           socket.emit('session', current_user);
           logon=true;
           
-          socket.on(current_user, function(msg){
-        $('#messages').append($('<li>').text(JSON.stringify(msg)));
-      }); 
+            socket.on(current_user, function(msg){
+              
+                if(JSON.stringify(msg.message.type=="text"))
+        
+                    {
+                    $('#messages').append($('<li>').text(JSON.stringify(msg.sender)+" says: "+JSON.stringify(msg.message.text)));
+                    }             
+            }); 
           
       });    
         
@@ -152,21 +157,6 @@
         //alert(receiver);
         });
         
-//      $("#users_input option:selected").text();
-      
-            
-//    alert(template.message.type);
-          
-//      function build_message(msg_text)
-//          {
-//              var msg_json=template;
-//              
-//              msg_json.sender=current_user;
-//              msg_json.receiver=receiver;
-//              msg_json.message.text=msg_text;
-//                          
-//              return msg_json;
-//          }
       
       
       </script>

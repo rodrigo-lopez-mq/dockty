@@ -35,9 +35,8 @@ io.on('connection', function(socket){
 //            {
 //                alert("Error, user doesn't exist");
 //            }
-        
-        
-        io.emit(msg.receiver, msg.message.text);
+          
+        io.emit(msg.receiver, msg);
         
     });
     
