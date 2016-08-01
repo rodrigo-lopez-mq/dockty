@@ -77,9 +77,12 @@
       var socket = io();
       var current_user; 
       var receiver;   
+      var domain = "team_maju";
         
         var template_text =
           '{'+
+            '"domain": "",'+
+            '"group": "",'+
             '"sender": "",'+
             '"receiver": "",'+
             '"message": {'+
@@ -93,40 +96,34 @@
           
       var template = JSON.parse(template_text);    
         
-//      $('form').submit(function(){
-//        socket.emit('chat message', $('#m').val());
-//        $('#m').val('');
-//        return false;
-//      });
-        
-//        socket.on('chat message', function(msg){
-//        $('#messages').append($('<li>').text(msg));
-//      });
         
         $('form').submit(function(){
         
               var msg_json=template;
               
-//              msg_json.sender=current_user;
-//              msg_json.receiver=receiver;
-//              msg_json.message.text=msg_text;
-            
-              msg_json.sender="maju";
-              msg_json.receiver="General";
+              msg_json.domain=domain;
+              msg_json.sender=current_user;
+              msg_json.receiver=receiver;
               msg_json.message.text=$('#m').val();
             
-        //alert(msg_json.message.text);    
+//              msg_json.sender="maju";
+//              msg_json.receiver="General";
+//              msg_json.message.text=$('#m').val();
+            
         socket.emit('message', msg_json);
         $('#m').val('');
         return false;
         });
         
+        var testi; 
+        
+        
+       
+          
       socket.on('message', function(msg){
         $('#messages').append($('<li>').text(JSON.stringify(msg)));
       });    
-      socket.on('chat message', function(msg){
-        $('#messages').append($('<li>').text(msg));
-      });
+
       socket.on('available_rooms', function(msg){
         $('#messages').append($('<li>').text(msg));
       });
@@ -140,6 +137,9 @@
           socket.emit('session', current_user);
           logon=true;
           
+          socket.on(current_user, function(msg){
+        $('#messages').append($('<li>').text(JSON.stringify(msg)));
+      }); 
           
       });    
         
